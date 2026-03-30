@@ -1,0 +1,314 @@
+{
+    "name": "Controls",
+    "maps": [
+        {
+            "name": "Manual",
+            "id": "4a967be2-9154-4e48-a211-d657596750f5",
+            "actions": [
+                {
+                    "name": "Control",
+                    "type": "Button",
+                    "id": "2f81218f-d106-4ea5-8282-e00be6202122",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "UseMouse",
+                    "type": "Button",
+                    "id": "8cacb93c-fed2-4b80-8b74-eadde760269c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MouseData",
+                    "type": "Value",
+                    "id": "ba5a71e8-a841-44fd-989d-099d4a4cc624",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Keys",
+                    "type": "PassThrough",
+                    "id": "55da7516-5b79-4c9e-83d9-94e1f57f93ad",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "b5f0abbc-ab33-4300-a3c3-e3a53953bc05",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Control",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5a31eb50-2094-4142-88b8-545fb5a034e5",
+                    "path": "<Keyboard>/leftAlt",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UseMouse",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ff472a84-7b1c-4da0-a3a7-f4db35de6613",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MouseData",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Arrows",
+                    "id": "5cd655e4-d4cb-48ca-90df-e62bdf2adf84",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Keys",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "0e0e86fe-9107-46f7-8911-28aeb7e05394",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Keys",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "edfce046-49fb-45c7-810a-5d3baf4bf969",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Keys",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "8cf61299-e66e-4ee1-a895-87efbbf16915",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Keys",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "54d98ca3-aa42-4272-be3f-3ed84e766e9a",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Keys",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                }
+            ]
+        },
+        {
+            "name": "Focus",
+            "id": "c96ecfe4-47f9-448d-9833-2e1dea52d1fe",
+            "actions": [
+                {
+                    "name": "LeftControllerPose",
+                    "type": "Value",
+                    "id": "4326ea92-2e1a-44c2-90f8-dfcb814f133b",
+                    "expectedControlType": "Pose",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "rightControllerPose",
+                    "type": "Value",
+                    "id": "409f97c5-49ec-4c5e-8c65-8aa92b6477b2",
+                    "expectedControlType": "Pose",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "leftPos",
+                    "type": "Value",
+                    "id": "fbed49d6-6cbb-4eb7-af4a-5e5ad851dff8",
+                    "expectedControlType": "Vector3",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "rightPos",
+                    "type": "Value",
+                    "id": "6ef0d958-a547-4416-89ec-e07e5e9d9667",
+                    "expectedControlType": "Vector3",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "leftRot",
+                    "type": "Value",
+                    "id": "41538d2a-627b-47fe-8cd5-e3475677a2d3",
+                    "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "rightRot",
+                    "type": "Value",
+                    "id": "6c6fc8fa-3a6e-4c53-9ee9-afa2492b2a41",
+                    "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f034debe-2ea7-4650-9fd1-37a23c7bd3e7",
+                    "path": "<XRController>{LeftHand}/devicePose",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftControllerPose",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4a82c317-437b-4b74-add2-f6ee25830a69",
+                    "path": "<XRController>{RightHand}/devicePose",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "rightControllerPose",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8efd7d01-bd49-4a8f-82c7-580c8a9602db",
+                    "path": "<XRController>{LeftHand}/devicePosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "leftPos",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "72868d2d-0504-4632-b2d1-4220be4a55fe",
+                    "path": "<OpenVRViveCosmosController>{LeftHand}/deviceRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "leftRot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4690e843-0641-44ef-94df-8d3b65914d70",
+                    "path": "<OpenVRViveCosmosController>{RightHand}/devicePosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "rightPos",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "15fd82c5-6d0c-43c5-ab64-31eeb6735468",
+                    "path": "<OpenVRViveCosmosController>{RightHand}/deviceRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "rightRot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Keyboard",
+            "id": "b0e4d71c-903f-49a2-a812-be1a00a4bf1a",
+            "actions": [
+                {
+                    "name": "Escape",
+                    "type": "Button",
+                    "id": "7bb94570-a414-4f2d-ad04-59a0dd4d00b1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "V",
+                    "type": "Button",
+                    "id": "7db2931a-eaf4-4e9e-97f8-55b182a3e089",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "dd732a41-a265-41ec-9140-bac43b9a999b",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Escape",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "05844308-2b47-4080-bfc7-9a5c5bbd94c0",
+                    "path": "<Keyboard>/v",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "V",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
