@@ -4,17 +4,17 @@ using UnityEngine;
 public class ViewportLogger : DataProvider
 {
     [SerializeField]
+    private GameObject upperLeft;
+    [SerializeField]
     private GameObject upperMiddle;
     [SerializeField]
     private GameObject upperRight;
     [SerializeField]
-    private GameObject lowerRight;
+    private GameObject lowerLeft;
     [SerializeField]
     private GameObject lowerMiddle;
     [SerializeField]
-    private GameObject lowerLeft;
-    [SerializeField]
-    private GameObject upperLeft;
+    private GameObject lowerRight;
 
     public override Dictionary<string, object> GetData()
     {
