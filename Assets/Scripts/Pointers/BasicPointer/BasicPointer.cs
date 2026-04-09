@@ -80,8 +80,6 @@ public class BasicPointer : Pointer
         Vector3 origin = laserOrigin.transform.position;
         Vector3 rayDirection = (mappedPosition - origin).normalized;
 
-        Debug.DrawRay(origin + laserOffset, rayDirection, Color.red, 2f, true);
-
         RaycastHit hit;
         if (Physics.Raycast(origin + laserOffset, rayDirection, out hit, 100f, Physics.DefaultRaycastLayers))
         {
