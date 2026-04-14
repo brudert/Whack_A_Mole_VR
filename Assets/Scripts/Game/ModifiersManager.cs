@@ -580,25 +580,33 @@ public class ModifiersManager : MonoBehaviour
     {
         if (mirrorEffect)
         {
-            controllersList["main"].gameObject.GetComponent<ControllerModifierManager>().EnableMirror(viveCamera.transform, wallReference);
+            leftControllerContainer.localScale = new Vector3(-1, 1, 1);
+            rightControllerContainer.localScale = new Vector3(-1, 1, 1);
+            leftControllerContainer.localPosition = new Vector3(-0.44f, 0, 0);
+            rightControllerContainer.localPosition = new Vector3(0.44f, 0, 0);
+            //controllersList["main"].gameObject.GetComponent<ControllerModifierManager>().EnableMirror(viveCamera.transform, wallReference);
 
-            if (!dualTask)
-            {
-                controllersList["second"].gameObject.GetComponent<ControllerModifierManager>().DisableMirror();
-            }
-            else
-            {
-                controllersList["second"].gameObject.GetComponent<ControllerModifierManager>().EnableMirror(viveCamera.transform, wallReference);
-            }
+            //if (!dualTask)
+            //{
+            //    controllersList["second"].gameObject.GetComponent<ControllerModifierManager>().DisableMirror();
+            //}
+            //else
+            //{
+            //    controllersList["second"].gameObject.GetComponent<ControllerModifierManager>().EnableMirror(viveCamera.transform, wallReference);
+            //}
         }
         else
         {
-            controllersList["main"].gameObject.GetComponent<ControllerModifierManager>().DisableMirror();
+            leftControllerContainer.localScale = new Vector3(1, 1, 1);
+            rightControllerContainer.localScale = new Vector3(1, 1, 1);
+            leftControllerContainer.localPosition = new Vector3(0, 0, 0);
+            rightControllerContainer.localPosition = new Vector3(0, 0, 0);
+            //controllersList["main"].gameObject.GetComponent<ControllerModifierManager>().DisableMirror();
 
-            if (dualTask)
-            {
-                controllersList["second"].gameObject.GetComponent<ControllerModifierManager>().DisableMirror();
-            }
+            //if (dualTask)
+            //{
+            //    controllersList["second"].gameObject.GetComponent<ControllerModifierManager>().DisableMirror();
+            //}
         }
     }
 
