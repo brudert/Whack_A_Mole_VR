@@ -1,8 +1,11 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using Valve.VR;
+using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.OpenXR.Input;
 
 public class HmdCalibration : MonoBehaviour
 {
@@ -13,55 +16,28 @@ public class HmdCalibration : MonoBehaviour
     public CalibrationEvent calibrationUpdate;
 
     [SerializeField]
-    private SteamVR_Input_Sources controller;
-
-    [SerializeField]
-    private GameObject controllerGameObject;
+    private ActionBasedController controllerGameObject;
 
     [SerializeField]
     private float ratioSpeed = 3f;
 
     bool calibrated = false;
-    int timeout = 100;
-    int time = 0;
 
     [SerializeField]
-    private CanvasGroup canvasGroupToFade; // Used to make disappear all elements linked to a canvas
+    private CanvasGroup canvasGroupToFade; // Used to make disappear all elements linked to a canvas}
 
-    // Start is called before the first frame update
-    void Awake()
+    private bool calibrationActionPressed()
     {
-        controllerGameObject.GetComponent<SteamVR_Behaviour_Pose>().onTransformUpdated.AddListener(delegate { PositionUpdated(); });
+        return controllerGameObject.activateAction.action.ReadValue<float>() >= 0.5;
     }
 
     public void Update()
     {
         if (!calibrated)
         {
-            if (Keyboard.current.vKey.wasPressedThisFrame)
+            if (Keyboard.current.vKey.wasPressedThisFrame || calibrationActionPressed())
             {
                 CloseInstructionPanel();
-            }
-        }
-    }
-
-    // Update is called once per frame
-    public void PositionUpdated()
-    {
-        // HACK: for some reason we need invoke the calibrationUpdate a couple of times..
-        // need to investigate why this is..
-        if (time < timeout)
-        {
-            if (true /*SteamVR.active*/)
-            {
-                if (SteamVR_Actions._default.GrabPinch.GetStateDown(controller))
-                {
-                    CloseInstructionPanel();
-                }
-            }
-            if (calibrated)
-            {
-                time++;
             }
         }
     }
