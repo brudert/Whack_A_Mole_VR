@@ -255,11 +255,13 @@ public abstract class Mole : MonoBehaviour
         {
             return;
         }
+        isHovered = true;
         PlayHoverEnter();
     }
 
     public void OnHoverLeave()
     {
+        isHovered = false;
         if (state != States.Enabled)
         {
             return;
@@ -391,12 +393,13 @@ public abstract class Mole : MonoBehaviour
         }
     }
 
+    private bool isHovered = false;
 
     // IEnumerator starting the enabled timer.
     private IEnumerator StartActivatedTimer(float duration)
     {
         activatedTimeLeft = duration;
-        while (activatedTimeLeft > 0)
+        while (activatedTimeLeft > 0 || isHovered)
         {
             if (!isPaused)
             {
@@ -415,7 +418,7 @@ public abstract class Mole : MonoBehaviour
     private IEnumerator StartExpiringTimer(float duration)
     {
         expiringTimeLeft = duration;
-        while (expiringTimeLeft > 0)
+        while (expiringTimeLeft > 0 || isHovered)
         {
             if (!isPaused)
             {
