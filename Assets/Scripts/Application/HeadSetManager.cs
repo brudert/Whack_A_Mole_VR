@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Valve.VR;
 
 public class HeadSetManager : MonoBehaviour
 {
@@ -30,7 +29,7 @@ public class HeadSetManager : MonoBehaviour
 
     void OnDeviceConnected(int index, bool connected)
     {
-        if (OpenVR.System.IsTrackedDeviceConnected((uint)index))
+        if (connected)
         {
             UpdateDeviceStatus(true);
         }
