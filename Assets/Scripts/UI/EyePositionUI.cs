@@ -44,9 +44,9 @@ public class UIGazeDisplayWall : MonoBehaviour
         Dictionary<string, object> data = gaze.GetData();
         if ((bool)data["GazeHit0"])
         {
-            leftEyeText.text = "Left Eye :\nX : " + ((float)data["GazeHitPosition0X"]).ToString() +
-                "\nY : " + ((float)data["GazeHitPosition0Y"]).ToString() +
-                "\nZ : " + ((float)data["GazeHitPosition0Z"]).ToString();
+            leftEyeText.text = "LX : " + ((float)data["GazeHitPosition0X"]).ToString("F2") +
+                "\nLY : " + ((float)data["GazeHitPosition0Y"]).ToString("F2") +
+                "\nLZ : " + ((float)data["GazeHitPosition0Z"]).ToString("F2");
             leftEyeHitPointBall.gameObject.SetActive(true);
             leftEyeHitPointBall.position = new Vector3(
                 (float)data["GazeHitPosition0X"],
@@ -57,13 +57,13 @@ public class UIGazeDisplayWall : MonoBehaviour
         else
         {
             leftEyeHitPointBall.gameObject.SetActive(false);
-            leftEyeText.text = "Right Eye :\nX : N/A\nY : N/A\nZ : N/A";
+            leftEyeText.text = "LX : N/A\nLY : N/A\nLZ : N/A";
         }
         if ((bool)data["GazeHit1"])
         {
-            rightEyeText.text = "Right Eye :\nX : " + ((float)data["GazeHitPosition1X"]).ToString() +
-                "\nY : " + ((float)data["GazeHitPosition1Y"]).ToString() +
-                "\nZ : " + ((float)data["GazeHitPosition1Z"]).ToString();
+            rightEyeText.text = "RX : " + ((float)data["GazeHitPosition1X"]).ToString("F2") +
+                "\nRY : " + ((float)data["GazeHitPosition1Y"]).ToString("F2") +
+                "\nRZ : " + ((float)data["GazeHitPosition1Z"]).ToString("F2");
             rightEyeHitPointBall.gameObject.SetActive(true);
             rightEyeHitPointBall.position = new Vector3(
                 (float)data["GazeHitPosition1X"],
@@ -74,7 +74,7 @@ public class UIGazeDisplayWall : MonoBehaviour
         else
         {
             rightEyeHitPointBall.gameObject.SetActive(false);
-            rightEyeText.text = "Right Eye :\nX : N/A\nY : N/A\nZ : N/A";
+            rightEyeText.text = "RX : N/A\nRY : N/A\nRZ : N/A";
         }
     }
 
