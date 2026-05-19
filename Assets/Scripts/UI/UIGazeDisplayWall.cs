@@ -11,13 +11,13 @@ public class UIGazeDisplayWall : MonoBehaviour
     [SerializeField]
     public HTCGazeLogger gaze;
     [SerializeField]
-    private GameObject leftEye;
-    [SerializeField]
-    private GameObject rightEye;
-    [SerializeField]
     private Text leftEyeText;
     [SerializeField]
     private Text rightEyeText;
+    [SerializeField]
+    private Transform leftEyeHitPointBall;
+    [SerializeField]
+    private Transform rightEyeHitPointBall;
 
     private float SelfWidth;
 
@@ -44,32 +44,36 @@ public class UIGazeDisplayWall : MonoBehaviour
         Dictionary<string, object> data = gaze.GetData();
         if ((bool)data["GazeHit0"])
         {
-            leftEye.SetActive(true);
-            Vector3 newPos = new Vector3((float)data["GazeHitPosition0X"], (float)data["GazeHitPosition0Y"]);
-            newPos -= wcenter; // Anchor coordinates to center
-            leftEye.transform.localPosition = newPos*scale;
-            leftEyeText.text = "Left Eye :\nX : " + data["GazeHitPosition0X"].ToString() +
-                "\nY : " + data["GazeHitPosition0Y"].ToString() +
-                "\nZ : " + data["GazeHitPosition0Z"].ToString();
+            leftEyeText.text = "Left Eye :\nX : " + ((float)data["GazeHitPosition0X"]).ToString() +
+                "\nY : " + ((float)data["GazeHitPosition0Y"]).ToString() +
+                "\nZ : " + ((float)data["GazeHitPosition0Z"]).ToString();
+            leftEyeHitPointBall.gameObject.SetActive(true);
+            leftEyeHitPointBall.position = new Vector3(
+                (float)data["GazeHitPosition0X"],
+                (float)data["GazeHitPosition0Y"],
+                (float)data["GazeHitPosition0Z"]
+            );
         }
         else
         {
-            leftEye.SetActive(false);
+            leftEyeHitPointBall.gameObject.SetActive(false);
             leftEyeText.text = "Right Eye :\nX : N/A\nY : N/A\nZ : N/A";
         }
         if ((bool)data["GazeHit1"])
         {
-            rightEye.SetActive(true);
-            Vector3 newPos = new Vector3((float)data["GazeHitPosition1X"], (float)data["GazeHitPosition1Y"]);
-            newPos -= wcenter; // Anchor coordinates to center
-            rightEye.transform.localPosition = newPos*scale;
-            rightEyeText.text = "Right Eye :\nX : " + data["GazeHitPosition1X"].ToString() +
-                "\nY : " + data["GazeHitPosition1Y"].ToString() +
-                "\nZ : " + data["GazeHitPosition1Z"].ToString();
+            rightEyeText.text = "Right Eye :\nX : " + ((float)data["GazeHitPosition1X"]).ToString() +
+                "\nY : " + ((float)data["GazeHitPosition1Y"]).ToString() +
+                "\nZ : " + ((float)data["GazeHitPosition1Z"]).ToString();
+            rightEyeHitPointBall.gameObject.SetActive(true);
+            rightEyeHitPointBall.position = new Vector3(
+                (float)data["GazeHitPosition1X"],
+                (float)data["GazeHitPosition1Y"],
+                (float)data["GazeHitPosition1Z"]
+            );
         }
         else
         {
-            rightEye.SetActive(false);
+            rightEyeHitPointBall.gameObject.SetActive(false);
             rightEyeText.text = "Right Eye :\nX : N/A\nY : N/A\nZ : N/A";
         }
     }
