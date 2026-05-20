@@ -205,6 +205,9 @@ public class HTCGazeLogger : DataProvider
     public override Dictionary<string, object> GetData()
     {
         updateData();
+        return GetCachedData();
+    }
+    public Dictionary<string, object> GetCachedData() {
         return new Dictionary<string, object>(){
             {"GazeValid0", GazeValid0},
             {"GazeValid1", GazeValid1},

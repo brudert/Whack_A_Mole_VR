@@ -41,7 +41,7 @@ public class UIGazeDisplayWall : MonoBehaviour
             (winfo.meshBoundsXmax + winfo.meshBoundsXmin) / 2,
             (winfo.meshBoundsYmax + winfo.meshBoundsYmin) / 2
         );
-        Dictionary<string, object> data = gaze.GetData();
+        Dictionary<string, object> data = gaze.GetCachedData();
         if ((bool)data["GazeHit0"])
         {
             leftEyeText.text = "LX : " + ((float)data["GazeHitPosition0X"]).ToString("F2") +
