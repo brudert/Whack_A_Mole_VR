@@ -2990,7 +2990,7 @@ GameObject:
   - component: {fileID: 121705699}
   - component: {fileID: 121705700}
   m_Layer: 0
-  m_Name: RightHand Controller
+  m_Name: Controller (right)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5175,7 +5175,7 @@ GameObject:
   - component: {fileID: 235334913}
   - component: {fileID: 235334914}
   m_Layer: 0
-  m_Name: LeftHand Controller
+  m_Name: Controller (left)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -55536,8 +55536,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3953361813885138335}
   m_HandleRect: {fileID: 5213886792327675102}
   m_Direction: 0
-  m_Value: 1
-  m_Size: 0.9999999
+  m_Value: 0
+  m_Size: 0.9999997
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
