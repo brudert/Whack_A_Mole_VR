@@ -5,6 +5,7 @@ using UnityEngine;
 public class EMGDataProcessor : MonoBehaviour
 {
     [SerializeField] public ThalmicMyo thalmicMyo;
+    [SerializeField] private StoreEMG StoreEMG;
     [SerializeField] private int smoothingWindowSize = 250;
 
     [SerializeField] private int[] rawEMGData = new int[8];
@@ -16,9 +17,11 @@ public class EMGDataProcessor : MonoBehaviour
 
     private void Start()
     {
-        if (thalmicMyo == null)
+        if (thalmicMyo == null || thalmicMyo._myo == null)
         {
-            Debug.LogError("[EMGDataProcessor] ThalmicMyo reference is not set in EMGDataProcessor.");
+            Debug.LogWarning("[EMGDataProcessor] ThalmicMyo reference is not set in EMGDataProcessor, Disabling.");
+            StoreEMG.enabled = false;
+            this.enabled = false;
             return;
         }
         thalmicMyo._myo.EmgData += onReceiveData;

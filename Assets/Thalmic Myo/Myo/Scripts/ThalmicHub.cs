@@ -121,10 +121,10 @@ public class ThalmicHub : MonoBehaviour //, IThalmicHub
 
         // The Hub needs to be initialized on the Android UI thread.
         unityActivity.Call("runOnUiThread", new AndroidJavaRunnable(() => {
-            createHub ();
+            this.enabled = createHub ();
         }));
 #else
-        createHub();
+        this.enabled = createHub();
 #endif
     }
 
@@ -138,7 +138,7 @@ public class ThalmicHub : MonoBehaviour //, IThalmicHub
         }
         catch (System.Exception e)
         {
-            Debug.LogError("ThalmicHub failed to initialize:" + e.Message);
+            Debug.LogWarning("ThalmicHub failed to initialize:" + e.Message);
             return false;
         }
         return true;
