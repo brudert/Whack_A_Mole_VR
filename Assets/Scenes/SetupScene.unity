@@ -49114,9 +49114,12 @@ MonoBehaviour:
   m_CharacterLimit: 4
   m_OnSubmit:
     m_PersistentCalls:
+      m_Calls: []
+  m_OnDidEndEdit:
+    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2477977885611635136}
-        m_TargetAssemblyTypeName: 
+        m_TargetAssemblyTypeName: ButtonTextController, Assembly-CSharp
         m_MethodName: OnInputEndEdit
         m_Mode: 1
         m_Arguments:
@@ -49127,9 +49130,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_OnDidEndEdit:
-    m_PersistentCalls:
-      m_Calls: []
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -53974,9 +53974,12 @@ MonoBehaviour:
   m_CharacterLimit: 4
   m_OnSubmit:
     m_PersistentCalls:
+      m_Calls: []
+  m_OnDidEndEdit:
+    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4093640881905353660}
-        m_TargetAssemblyTypeName: 
+        m_TargetAssemblyTypeName: ButtonTextController, Assembly-CSharp
         m_MethodName: OnInputEndEdit
         m_Mode: 1
         m_Arguments:
@@ -53987,9 +53990,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_OnDidEndEdit:
-    m_PersistentCalls:
-      m_Calls: []
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -55537,7 +55537,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 5213886792327675102}
   m_Direction: 0
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9999998
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -61812,9 +61812,12 @@ MonoBehaviour:
   m_CharacterLimit: 4
   m_OnSubmit:
     m_PersistentCalls:
+      m_Calls: []
+  m_OnDidEndEdit:
+    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8184999348443934463}
-        m_TargetAssemblyTypeName: 
+        m_TargetAssemblyTypeName: ButtonTextController, Assembly-CSharp
         m_MethodName: OnInputEndEdit
         m_Mode: 1
         m_Arguments:
@@ -61825,9 +61828,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_OnDidEndEdit:
-    m_PersistentCalls:
-      m_Calls: []
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []

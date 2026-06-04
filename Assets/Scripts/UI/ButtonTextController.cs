@@ -81,18 +81,15 @@ public class ButtonTextController : UiNotifier
     // On hover enter, activates the "edit" text.
     public void OnMouseEnter()
     {
-        if (!activated) return;
+        if (!activated || edit) return;
         FocusEdit();
     }
 
     // On hover leave, if the input field is not being edited, activates the information text.
     public void OnMouseLeave()
     {
-        if (!activated) return;
-        if (!edit)
-        {
-            FocusInfo();
-        }
+        if (!activated || edit) return;
+        FocusInfo();
     }
 
     // On end of the edition of the input field, checks the input value, activates the information text and notifies any listener that its value has changed.
