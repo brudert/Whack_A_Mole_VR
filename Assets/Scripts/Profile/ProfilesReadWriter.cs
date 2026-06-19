@@ -115,7 +115,8 @@ public class ProfilesReadWriter
         {
 
             StreamReader reader = new StreamReader(file.FullName);
-            string[] lines = reader.ReadToEnd().Split("\n"[0]);
+            char[] separators = { '\n', '\r' };
+            string[] lines = reader.ReadToEnd().Split(separators);
             Dictionary<string, string> properties = new Dictionary<string, string>();
 
             for (int i = 0; i < lines.Length; i++)

@@ -29,7 +29,8 @@ public class PatternReadWriter
         }
 
         StreamReader reader = new StreamReader(saveDirectory + patternName + "." + extensionName);
-        string[] lines = reader.ReadToEnd().Split("\n"[0]);
+        char[] separators = { '\n', '\r' };
+        string[] lines = reader.ReadToEnd().Split(separators);
 
         return lines;
     }
