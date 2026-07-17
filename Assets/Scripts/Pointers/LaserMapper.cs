@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -537,6 +538,12 @@ public class LaserMapper : MonoBehaviour
         ShowMotorspace(false);
     }
 
+    internal void SetOperationPerformanceFeedback(bool v, bool withText)
+    {
+        foreach (var bub in bubbleDisplay)
+            bub.SetPerformanceOperationFeedback(v, withText);
+    }
+
     private IEnumerator CoroutineCoordinator()
     {
         while (true)
@@ -546,4 +553,8 @@ public class LaserMapper : MonoBehaviour
             yield return null;
         }
     }
+
+    // Get the current controller that is being used by this laser mapper instance.
+    // Should have just one controller at a time.
+    public GameObject GetCurrentController() => activeControllers.FirstOrDefault();
 }

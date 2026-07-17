@@ -47,6 +47,15 @@ public class WallManager : MonoBehaviour
 {
     [SerializeField] public LoggingManager loggingManager;
 
+    [SerializeField]
+    private SoundManager soundManager;
+
+    [SerializeField]
+    private PerformanceManager performanceManager;
+
+    [SerializeField]
+    private MotorSpaceManager motorspaceManager;
+
     [Header("Default Wall Settings")]
     [SerializeField] private WallSettings defaultWall = new WallSettings();
 
@@ -93,7 +102,9 @@ public class WallManager : MonoBehaviour
     private int moleCount = 0;
     private int spawnOrder = 0;
     private bool wallVisible = true;
-    private bool performanceFeedback = true;
+    private bool performanceFeedbackAction = true;
+    private bool performanceFeedbackTask = true;
+    private bool performanceText = false;
 
     // Wall boundaries
     private float highestX = -1f;
@@ -194,6 +205,7 @@ public class WallManager : MonoBehaviour
         yCurveRatio = defaultWall.yCurveRatio;
         maxAngle = defaultWall.maxAngle;
         moleScale = defaultWall.moleScale;
+        targetSpawners = new Dictionary<int, TargetSpawner>();
     }
 
     private void UpdateWallLogs()
@@ -404,18 +416,86 @@ public class WallManager : MonoBehaviour
         return stateUpdateEvent;
     }
 
-    public void SetPerformanceFeedback(bool perf)
+    public void SetActionPerformanceFeedback(bool perf, bool withText)
     {
-        performanceFeedback = perf;
-
-        foreach (TargetSpawner targetSpawner in targetSpawners.Values)
+        performanceFeedbackAction = perf;
+        performanceText = withText;
+        if (targetSpawners != null && targetSpawners.Count > 0)
         {
-            targetSpawner.UpdateParameters(performanceFeedback: performanceFeedback);
+            foreach (TargetSpawner spawner in targetSpawners.Values)
+            {
+                spawner.SetPerformanceFeedback(performanceFeedbackAction, performanceText);
+            }
         }
     }
-    public bool GetPerformanceFeedback()
+
+    public void SetTaskPerformanceFeedback(bool perf)
     {
-        return performanceFeedback;
+        performanceFeedbackTask = perf;
+    }
+
+    public void ShowTaskFeedback(float duration)
+    {
+        if (!performanceFeedbackTask) { return; }
+        Debug.Log("ShowTaskFeedback called");
+        Debug.Log("targetSpawners.count: " + targetSpawners.Count.ToString());
+
+        // obtain perfData from performance manager
+        PerfData perfL = performanceManager.GetPerfData(ControllerName.Left);
+        PerfData perfR = performanceManager.GetPerfData(ControllerName.Right);
+
+        // Ordered list of moleIDs and their performance value.
+        List<(int id, float val)> molePerf = new List<(int id, float val)>();
+
+
+        // TODO: Currently mole performance is just averaged across both controllers.
+        // The number of shots go from 1 to max number. if maxShot is less than 1, no moles were shot.
+        if (perfR.maxShot < 1) return;
+
+        // perfR.maxShot and perfL.maxShot are the same value.
+        for (int i = 1; i <= perfR.maxShot; i++)
+        {
+            List<float> perfs = new List<float>();
+
+            int id = -1;
+            if (perfR.moleShootOrder.ContainsKey(i))
+            {
+                id = perfR.moleShootOrder[i];
+                perfs.AddRange(perfR.lastJudgesByMole[id]);
+            }
+            if (perfL.moleShootOrder.ContainsKey(i))
+            {
+                id = perfL.moleShootOrder[i];
+                perfs.AddRange(perfL.lastJudgesByMole[id]);
+            }
+            if (perfs.Count > 0)
+            {
+                (int id, float val) perf = (id, perfs.Average());
+                molePerf.Add(perf);
+            }
+        }
+
+        StartCoroutine(WaitShowTaskFeedback(duration, molePerf, 0.15f));
+        motorspaceManager.ShowTaskFeedback(duration, molePerf, 0.15f);
+    }
+
+    private IEnumerator WaitShowTaskFeedback(float duration, List<(int id, float val)> molePerf, float animationDelay)
+    {
+        float timeSpent = 0f;
+
+        foreach (var fb in molePerf)
+        {
+            if (fb.id != -1)
+            {
+                targetSpawners[fb.id].PlayFeedback(fb.val, duration - timeSpent);
+                soundManager.PlaySoundWithPitch(gameObject, SoundManager.Sound.greenMoleHit, fb.val);
+                timeSpent += animationDelay;
+                yield return new WaitForSeconds(animationDelay);
+            }
+        }
+
+        // At the end of the feedback, cleanup perf data.
+        performanceManager.ResetDataKeepThreshold();
     }
 
     // Returns a random, inactive TargetSpawner (isFree == true). Throws if none are free.
@@ -471,5 +551,15 @@ public class WallManager : MonoBehaviour
     public void ResetMoleSpawnOrder()
     {
         moleCount = 0;
+    }
+
+    public bool GetPerformanceFeedbackTask()
+    {
+        return performanceFeedbackTask;
+    }
+
+    public bool GetPerformanceFeedbackAction()
+    {
+        return performanceFeedbackAction;
     }
 }

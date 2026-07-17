@@ -16,6 +16,9 @@ public class DiskMole : Mole
     private Color enabledColor;
 
     [SerializeField]
+    private Color feedbackLowColor;
+
+    [SerializeField]
     private Color fakeEnabledColor;
 
     [SerializeField]
@@ -196,6 +199,14 @@ public class DiskMole : Mole
         {
             meshMaterial.color = fakeEnabledColor;
         }
+    }
+    public override void PlayFeedback(float feedback, float duration)
+    {
+        Color colorFeedback = Color.Lerp(popColor, feedbackLowColor, feedback);
+        PlayAnimation("PopCorrectMole");
+
+        // Removed : does not work well with current system.
+        //StartCoroutine(ChangeColorOverTime(enabledColor, colorFeedback, disabledColor, 0.15f, duration - 1.5f, feedback, -1f));
     }
 
     protected override IEnumerator PlayPopping()

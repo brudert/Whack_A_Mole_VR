@@ -343,9 +343,10 @@ public class PatternInterface : MonoBehaviour
         {
             modifiersManager.SetMotorspace((ModifiersManager.MotorspaceSize)System.Enum.Parse(typeof(ModifiersManager.MotorspaceSize), tempValue));
         }
+        // TYPE OF JUDGEMENT FEEDBACK : Enum with : None, Operation, Action, Task, All
         if (action.TryGetValue("PERFORMANCEFEEDBACK", out tempValue))
         {
-            modifiersManager.SetPerformanceFeedback(bool.Parse(tempValue));
+            modifiersManager.SetPerformanceFeedback((ModifiersManager.PerformanceFeedback)System.Enum.Parse(typeof(ModifiersManager.PerformanceFeedback), tempValue));
         }
         if (action.TryGetValue("HAPTICFEEDBACK", out tempValue))
         {

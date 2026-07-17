@@ -4,6 +4,28 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
+using Valve.VR;
+
+public class MoveData
+{
+    public Vector3 controllerPos = Vector3.zero;
+    public Vector3 cursorPos = Vector3.zero;
+    public ControllerName name;
+}
+
+public class ShootData
+{
+    public Vector3 position = Vector3.zero;
+    public RaycastHit hit;
+    public ControllerName name;
+    public float dwell;
+}
+
+public enum ControllerName
+{
+    Left,
+    Right
+}
 
 /*
 Abstract class of the VR pointer used to pop moles. Like the Mole class, calls specific empty
@@ -57,6 +79,9 @@ public abstract class Pointer : MonoBehaviour
     [SerializeField]
     protected float shotCooldown;
 
+    [SerializeReference]
+    public PerformanceManager performanceManager;
+
     [SerializeField]
     protected float dwellTime = 2f;
 
@@ -70,20 +95,43 @@ public abstract class Pointer : MonoBehaviour
     private Mole hoveredMole;
 
     protected LineRenderer laser;
+    protected bool performanceFeedbackOperation = true;
+    protected bool performanceFeedbackTask = true;
     protected bool performancefeedback = true;
+    protected bool performanceText = false;
     protected bool active = false;
     protected LoggerNotifier loggerNotifier;
     protected float dwellStartTimer = 0f;
     protected int pointerShootOrder = -1;
+    protected ControllerName controllerName;
 
     [System.Serializable]
     public class OnPointerShoot : UnityEvent { }
     public OnPointerShoot onPointerShoot;
 
+    [System.Serializable]
+    public class OnPointerMove : UnityEvent<MoveData> { }
+    public OnPointerMove onPointerMove;
+
     protected ActionBasedController controller;
     private InputAction clickAction;
     [SerializeField]
     private float UpdateInterval = 1.0f;
+
+
+    // On Awake, gets the cursor object if there is one.
+    void Awake()
+    {
+        if (gameObject.name == "Controller (right)")
+        {
+            controllerName = ControllerName.Right;
+        }
+        else if (gameObject.name == "Controller (left)")
+        {
+            controllerName = ControllerName.Left;
+        }
+    }
+
     // On start, inits the logger notifier.
     void Start()
     {
@@ -135,6 +183,22 @@ public abstract class Pointer : MonoBehaviour
         }
         yield return new WaitForSeconds(UpdateInterval);
     }
+    public ControllerName GetControllerName()
+    {
+        return controllerName;
+    }
+
+
+    // Used steamvr to vibrate controllers. Need openXR reimplementation
+    public void Pulse(float duration, float frequency, float amplitude)
+    {
+        //if (!SteamVR.active) return;
+        //// duration in seconds
+        //// frequency in hz
+        //// amplitude in 75
+
+        //hapticAction.Execute(0, duration, frequency, amplitude, controller);
+    }
 
     public void SetPointerEnable(bool active)
     {
@@ -158,7 +222,22 @@ public abstract class Pointer : MonoBehaviour
         });
     }
 
-    public void SetPerformanceFeedback(bool perf) => performancefeedback = perf;
+
+    public void SetOperationPerformanceFeedback(bool perf)
+    {
+        performanceFeedbackOperation = perf;
+    }
+
+    public void SetTaskPerformanceFeedback(bool perf)
+    {
+        performanceFeedbackTask = perf;
+    }
+
+    public void SetActionPerformanceFeedback(bool perf, bool withText)
+    {
+        performancefeedback = perf;
+        performanceText = withText;
+    }
 
     // Enables the pointer
     public virtual void Enable()
@@ -220,6 +299,13 @@ public abstract class Pointer : MonoBehaviour
         Vector3 origin = laserOrigin.transform.position;
         Vector3 rayDirection = (mappedPosition - origin).normalized;
 
+        onPointerMove.Invoke(new MoveData
+        {
+            controllerPos = pos,
+            cursorPos = mappedPosition,
+            name = controllerName
+        });
+
         RaycastHit hit;
         if (Physics.Raycast(laserOrigin.transform.position + laserOffset, rayDirection, out hit, 100f, Physics.DefaultRaycastLayers))
         {
@@ -270,6 +356,9 @@ public abstract class Pointer : MonoBehaviour
     }
 
     // Functions to call in the class implementation to add extra animation/effect behavior on shoot/cooldown.
+    public virtual void ShowTaskFeedback(float duration, List<(int id, float val)> molePerf, float animationDelay) { }
+
+    // Functions to call in the class implementation to add extra animation/effect behavior on shoot/cooldown.
     protected virtual void PlayShoot(bool correctHit) { }
     protected virtual void PlayCooldownEnd() { }
 
@@ -305,6 +394,13 @@ public abstract class Pointer : MonoBehaviour
 
         state = States.CoolingDown;
         StartCoroutine(WaitForCooldown());
+
+        performanceManager.OnPointerShoot(new ShootData
+        {
+            hit = hit,
+            dwell = this.dwellTime,
+            name = controllerName
+        });
 
         onPointerShoot.Invoke();
         if (hit.collider)

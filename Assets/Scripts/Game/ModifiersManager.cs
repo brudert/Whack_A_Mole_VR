@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -25,9 +26,13 @@ public class ModifiersManager : MonoBehaviour
     public enum ControllerSetup { Left, Both, Right, Off };
     public enum Embodiment { Full, LeftArm, RightArm, Arms, LeftHand, RightHand, Hands, Cursor, Off };
     public enum MotorspaceSize { Small, Medium, Large };
+    public enum PerformanceFeedback { None, Operation, Action, Task, All };
     public enum EyePatch { Left, None, Right };
     public enum HideWall { Left, None, Right };
     public enum PointerType { BasicPointer, EMGPointer };
+
+    [SerializeField]
+    private bool performanceFeedbackText = false;
 
     [SerializeField]
     private GameObject hideWallLeft;
@@ -92,6 +97,10 @@ public class ModifiersManager : MonoBehaviour
 
     [SerializeField]
     private GameObject physicalMirror;
+
+    [SerializeField]
+    private PerformanceManager performanceManager;
+
     [SerializeField]
     private GameObject VRBody;
 
@@ -109,7 +118,8 @@ public class ModifiersManager : MonoBehaviour
     private EyePatch eyePatch = EyePatch.None;
     private HideWall hideWall = HideWall.None;
     private ControllerSetup controllerSetup = ControllerSetup.Right;
-    private bool performanceFeedback = true;
+    private ModifiersManager.PerformanceFeedback performanceFeedback = PerformanceFeedback.All;
+    private JudgementType judgementType = JudgementType.MaxSpeed;
     private bool mirrorEffect;
     private bool physicalMirrorEffect;
     private bool geometricMirrorEffect;
@@ -226,7 +236,7 @@ public class ModifiersManager : MonoBehaviour
         SetPrismOffset((float)state["PrismOffset"]);
         SetMainController((ModifiersManager.ControllerSetup)state["ControllerSetup"]);
         SetControllerEnabled((ModifiersManager.ControllerSetup)state["ControllerSetup"], true);
-        SetPerformanceFeedback((bool)state["PerformanceFeedback"]);
+        SetPerformanceFeedback((ModifiersManager.PerformanceFeedback)state["PerformanceFeedback"]);
         SetEmbodiment((ModifiersManager.Embodiment)state["Embodiment"]);
     }
 
@@ -302,24 +312,55 @@ public class ModifiersManager : MonoBehaviour
         });
     }
 
-    public void SetPerformanceFeedback(bool value)
+
+    public void SetPerformanceFeedback(PerformanceFeedback value)
     {
-        if (performanceFeedback == value) return;
+        bool actionFeedback = false;
+        bool operationFeedback = false;
+        bool taskFeedback = false;
 
-        performanceFeedback = value;
+        switch (value)
+        {
+            case PerformanceFeedback.Operation:
+                operationFeedback = true;
+                break;
+            case PerformanceFeedback.Action:
+                actionFeedback = true;
+                break;
+            case PerformanceFeedback.Task:
+                taskFeedback = true;
+                break;
+            case PerformanceFeedback.All:
+                actionFeedback = operationFeedback = taskFeedback = true;
+                break;
+        }
 
-        wallManager.SetPerformanceFeedback(performanceFeedback);
-        // Apply performance feedback to all pointers in rightControllerPointers using LINQ
-        rightControllerPointers.ToList().ForEach(pointer => pointer.SetPerformanceFeedback(performanceFeedback));
-        leftControllerPointers.ToList().ForEach(pointer => pointer.SetPerformanceFeedback(performanceFeedback));
+        bool withText = performanceFeedbackText;
+        // Apply values to all modifiers
+        wallManager.SetActionPerformanceFeedback(actionFeedback, withText);
+        foreach (Pointer c in rightControllerPointers)
+        {
+            c.SetActionPerformanceFeedback(actionFeedback, withText);
+        }
+        foreach (Pointer c in leftControllerPointers)
+        {
+            c.SetActionPerformanceFeedback(actionFeedback, withText);
+        }
+
+        // Task changes
+        wallManager.SetTaskPerformanceFeedback(taskFeedback);
+        motorSpaceManager.SetTaskPerformanceFeedback(taskFeedback);
+        motorSpaceManager.SetOperationPerformanceFeedback(operationFeedback, withText);
 
         // Raises an Event and updates a PersistentEvent's parameter (in consequence, a PersistentEvent will also be raised)
-        loggerNotifier.NotifyLogger("Performance Feedback Set " + value, EventLogger.EventType.ModifierEvent, new Dictionary<string, object>()
+        loggerNotifier.NotifyLogger($"Performance Feedback Set {Enum.GetName(typeof(PerformanceFeedback), value)}", EventLogger.EventType.ModifierEvent, new Dictionary<string, object>()
         {
-            {"PerformanceFeedback", value}
+            {"PerformanceFeedback", Enum.GetName(typeof(PerformanceFeedback), value)}
         });
 
-        modifierUpdateEvent.Invoke("PerformanceFeedback", value.ToString());
+        modifierUpdateEvent.Invoke($"PerformanceFeedback", Enum.GetName(typeof(PerformanceFeedback), value));
+
+        this.performanceFeedback = value;
     }
 
     public void SetMotorRestriction(bool value)
@@ -626,6 +667,21 @@ public class ModifiersManager : MonoBehaviour
             //    controllersList["second"].gameObject.GetComponent<ControllerModifierManager>().DisableMirror();
             //}
         }
+    }
+    public void SetJudgementType(JudgementType value)
+    {
+        if (judgementType == value) return;
+        performanceManager.SetJudgementType(value);
+
+        // Raises an Event and updates a PersistentEvent's parameter (in consequence, a PersistentEvent will also be raised)
+        loggerNotifier.NotifyLogger($"Judgement Type Set {Enum.GetName(typeof(JudgementType), value)}", EventLogger.EventType.ModifierEvent, new Dictionary<string, object>()
+        {
+            {"JudgementType", Enum.GetName(typeof(JudgementType), value)}
+        });
+
+        modifierUpdateEvent.Invoke($"JudgementType", Enum.GetName(typeof(JudgementType), value));
+
+        this.judgementType = value;
     }
 
     // Sets the level of embodiment used by the game. (Show hands (including controller) or just cursor).

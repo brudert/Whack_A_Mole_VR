@@ -88,6 +88,9 @@ public class BubbleDisplay : MonoBehaviour
     [SerializeField]
     private Color motorDisabledColor;
 
+    [SerializeReference]
+    public PointerTrailHandler pointerTrailHandler;
+
     private float newPosX;
     private float newPosY;
     private float newPosZ;
@@ -302,5 +305,10 @@ public class BubbleDisplay : MonoBehaviour
                 yield return null;
             }
         }
+    }
+
+    internal void SetPerformanceOperationFeedback(bool v, bool withText)
+    {
+        pointerTrailHandler.SetConfigVisibility(v, withText);
     }
 }
