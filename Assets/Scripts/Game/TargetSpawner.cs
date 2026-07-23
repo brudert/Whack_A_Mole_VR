@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -30,6 +31,11 @@ public class TargetSpawner : MonoBehaviour
     private MoleParameters parameters;
     private class StateUpdateEvent : UnityEvent<bool, Mole> { };
     private StateUpdateEvent stateUpdateEvent = new StateUpdateEvent();
+
+    private bool performanceFeedbackAction = true;
+    private bool performanceFeedbackTask = true;
+    private bool performanceText = false;
+    private Mole.MoleType lastMoleType;
 
     public static TargetSpawner Instantiate(TargetSpawner prefab, Transform parentTransform, Vector3 position, Quaternion rotation, MoleParameters parameters)
     {
@@ -66,6 +72,7 @@ public class TargetSpawner : MonoBehaviour
             Debug.LogError(errorMessage);
             throw new System.Exception(errorMessage);
         }
+        lastMoleType = type;
 
         currentMole.Init(this);
         currentMole.SetNormalizedIndex(parameters.normalizedIndex);
@@ -76,10 +83,43 @@ public class TargetSpawner : MonoBehaviour
         currentMole.Enable(lifeTime, expiringDuration, type, outcome, spawnOrder); // TODO future update, check if enable still needed (or change to init)
         stateUpdateEvent.Invoke(true, currentMole);
 
-      
+
 
         _lock = true;
         return currentMole;
+    }
+
+    /// <summary>
+    /// Spawns a temporary mole, mainly for feedback purposes.
+    /// MUST be manually destroyed after use.
+    /// </summary>
+    /// <param name="type">MoleType of Mole to create.</param>
+    /// <returns>the created Mole.</returns>
+    /// <exception cref="System.Exception"></exception>
+    public Mole SpawnTempMole(Mole.MoleType type)
+    {
+        if (_lock)
+        {
+            Debug.LogWarning($"Mistake: TargetSpawn {id} already has a mole. Returning the current one instead of creating a new one.");
+            return GetCurrentMole();
+        }
+
+        currentMole = Instantiate(molePrefabs.GetPrefab(type), transform).GetComponent<Mole>();
+
+        if (currentMole == null)
+        {
+            string errorMessage = $"Prefab for type {type} does not have a Mole component.";
+            Debug.LogError(errorMessage);
+            throw new System.Exception(errorMessage);
+        }
+        _lock = true;
+        return currentMole;
+    }
+
+    public void SetPerformanceFeedback(bool perf, bool withText)
+    {
+        performanceFeedbackAction = perf;
+        performanceText = withText;
     }
 
     public void DespawnMole()
@@ -99,7 +139,17 @@ public class TargetSpawner : MonoBehaviour
     public Mole GetCurrentMole() => currentMole;
     public int GetId() => id;
     public UnityEvent<bool, Mole> GetUpdateEvent() => stateUpdateEvent;
-
+    public void PlayFeedback(float feedback, float duration) {
+        if (currentMole != null) {
+            currentMole.PlayFeedback(feedback, duration);
+        }
+        else
+        {
+            Mole mole = SpawnTempMole(this.lastMoleType);
+            mole.PlayFeedback(feedback, duration);
+            DespawnMole();
+        }
+    }
 }
 
 

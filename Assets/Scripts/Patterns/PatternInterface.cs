@@ -11,6 +11,7 @@ public class PatternInterface : MonoBehaviour
 {
     private WallManager wallManager;
     private ModifiersManager modifiersManager;
+    private PerformanceManager performanceManager;
     private GameDirector gameDirector;
     private MotorSpaceManager motorspaceManager;
     private LoggerNotifier loggerNotifier;
@@ -68,6 +69,7 @@ public class PatternInterface : MonoBehaviour
     {
         wallManager = FindObjectOfType<WallManager>();
         modifiersManager = FindObjectOfType<ModifiersManager>();
+        performanceManager = FindObjectOfType<PerformanceManager>();
         gameDirector = FindObjectOfType<GameDirector>();
         motorspaceManager = FindObjectOfType<MotorSpaceManager>();
         playerPanel = FindObjectOfType<PlayerPanel>();
@@ -343,9 +345,15 @@ public class PatternInterface : MonoBehaviour
         {
             modifiersManager.SetMotorspace((ModifiersManager.MotorspaceSize)System.Enum.Parse(typeof(ModifiersManager.MotorspaceSize), tempValue));
         }
+        // TYPE OF JUDGEMENT FEEDBACK : Enum with : None, Operation, Action, Task, All
         if (action.TryGetValue("PERFORMANCEFEEDBACK", out tempValue))
         {
-            modifiersManager.SetPerformanceFeedback(bool.Parse(tempValue));
+            modifiersManager.SetPerformanceFeedback((ModifiersManager.PerformanceFeedback)System.Enum.Parse(typeof(ModifiersManager.PerformanceFeedback), tempValue));
+        }
+        // TYPE OF JUDGEMENT CALCULATION : Enum with : None, MaxConstant, Random, MaxSpeed, Distance, Time
+        if (action.TryGetValue("PERFORMANCEJUDGEMENT", out tempValue))
+        {
+            performanceManager.SetJudgementType((JudgementType)System.Enum.Parse(typeof(JudgementType), tempValue));
         }
         if (action.TryGetValue("HAPTICFEEDBACK", out tempValue))
         {

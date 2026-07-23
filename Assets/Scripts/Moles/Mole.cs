@@ -355,6 +355,11 @@ public abstract class Mole : MonoBehaviour
         yield break;
     }
 
+    public virtual void PlayFeedback(float feedback, float duration)
+    {
+
+    }
+
     private void ChangeState(States newState)
     {
         if (newState == state) return;

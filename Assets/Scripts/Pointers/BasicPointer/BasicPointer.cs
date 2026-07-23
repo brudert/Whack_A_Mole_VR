@@ -58,6 +58,27 @@ public class BasicPointer : Pointer
         PositionUpdated();
     }
 
+    public override void ShowTaskFeedback(float duration, List<(int id, float val)> molePerf, float animationDelay)
+    {
+        if (!performanceFeedbackTask) { return; }
+        StartCoroutine(WaitShowTaskFeedback(duration, molePerf, animationDelay));
+    }
+
+    private IEnumerator WaitShowTaskFeedback(float duration, List<(int id, float val)> molePerf, float animationDelay)
+    {
+        float timeSpent = 0f;
+
+        foreach ((int id, float val) fb in molePerf)
+        {
+            if (fb.id != -1)
+            {
+                Pulse(duration: 0.1f, frequency: 150, amplitude: fb.val * 50);
+                timeSpent += animationDelay;
+                yield return new WaitForSeconds(animationDelay);
+            }
+        }
+    }
+
     // Function called on VR update, since it can be faster/not synchronous to Update() function. Makes the Pointer slightly more reactive.
     public override void PositionUpdated()
     {
@@ -79,6 +100,14 @@ public class BasicPointer : Pointer
         Vector3 mappedPosition = laserMapper.ConvertMotorSpaceToWallSpace(pos);
         Vector3 origin = laserOrigin.transform.position;
         Vector3 rayDirection = (mappedPosition - origin).normalized;
+        Vector3 v = controller.transform.position;
+
+        performanceManager.OnPointerMove(new MoveData
+            {
+                controllerPos = pos,
+                cursorPos = mappedPosition,
+                name = controllerName
+            });
 
         RaycastHit hit;
         if (Physics.Raycast(origin + laserOffset, rayDirection, out hit, 100f, Physics.DefaultRaycastLayers))

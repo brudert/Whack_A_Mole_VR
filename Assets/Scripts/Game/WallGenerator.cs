@@ -107,7 +107,7 @@ public class WallGenerator : MonoBehaviour
                 {
                     id = GenerateIdByIndex(x, y),
                     localScale = wallSettings.moleScale,
-                    performanceFeedback = wallManager.GetPerformanceFeedback(),
+                    performanceFeedback = wallManager.GetPerformanceFeedbackAction(),
                     normalizedIndex = GetnormalizedIndex(x, y)
                 };
 
