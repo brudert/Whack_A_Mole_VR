@@ -89,7 +89,16 @@ public class BubbleDisplay : MonoBehaviour
     private Color motorDisabledColor;
 
     [SerializeReference]
+    private HUDManager hudPanel;
+
+    [SerializeField]
+    private OutOfBoundManager outOfBoundManager;  // The current active indicator
+
+    [SerializeReference]
     public PointerTrailHandler pointerTrailHandler;
+
+    public Side LastLaserMapperNearestSide { get; private set; }
+    public GameObject CurrentController { get; private set; }
 
     private float newPosX;
     private float newPosY;
@@ -128,6 +137,7 @@ public class BubbleDisplay : MonoBehaviour
         controllerModifierManager = parent.GetComponent<ControllerModifierManager>();
         controllerModifierManager.SetControllerVisibility(true);
         motorSpaceRender.color = motorDisabledColor;
+        CurrentController = laserMapper.GetCurrentController();
     }
 
     // Update is called once per frame
@@ -161,6 +171,11 @@ public class BubbleDisplay : MonoBehaviour
                 bubbleSphere.SetActive(showBubble);
                 controllerModifierManager.SetControllerVisibility(true);
                 motorSpaceRender.color = motorActiveColor;
+
+                // Hide the out-of-bound indicator.
+                outOfBoundManager?.HideIndicator(laserMapper.GetCurrentController().name);
+                hudPanel.Reset();
+
                 enterMotorStateEvent.Invoke(new EnterMotorSpaceInfo
                 {
                     side = laserMapper.NearestSide(newPos),
@@ -193,6 +208,11 @@ public class BubbleDisplay : MonoBehaviour
                 bubbleSphere.SetActive(showBubble);
                 controllerModifierManager.SetControllerVisibility(true);
                 motorSpaceRender.color = motorDisabledColor;
+
+                // Show the out-of-bound indicator.
+                outOfBoundManager.ShowIndicator(newPos, laserMapper.GetWallMeshCenter(), LastLaserMapperNearestSide, CurrentController.name);
+                hudPanel.ActivateGradient(LastLaserMapperNearestSide, FadeAction.In);
+
                 enterMotorStateEvent.Invoke(new EnterMotorSpaceInfo
                 {
                     side = laserMapper.NearestSide(newPos),
@@ -212,6 +232,19 @@ public class BubbleDisplay : MonoBehaviour
                 }
                 action = MotorAction.Outside;
             }
+        }
+    }
+
+    public void ChangeIndicator(ArrowType arrowType, string controllerName)
+    {
+        outOfBoundManager.ChangeIndicator(arrowType, controllerName);
+
+        // If the user is outside of the MotorSpace, display the new indicator
+        if (action == MotorAction.Outside)
+        {
+            Vector3 newPos = new Vector3(newPosX, newPosY, newPosZ);
+            Side side = laserMapper.NearestSide(newPos);
+            outOfBoundManager?.ShowIndicator(newPos, laserMapper.transform.position, side, CurrentController.name);
         }
     }
 

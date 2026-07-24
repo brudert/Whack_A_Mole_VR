@@ -429,7 +429,6 @@ public class PerformanceManager : MonoBehaviour
     /// <param name="moveData">Data related to the pointer's movement, including position and associated controller details.</param>
     public void OnPointerMove(MoveData moveData)
     {
-        Debug.Log(moveData);
         // Retrieve performance data for the given name from the dictionary.
         PerfData perf = perfData[moveData.name];
 

@@ -46,7 +46,6 @@ public class ModifiersManager : MonoBehaviour
         public bool? motorRestriction;
         public float? motorRestrictionUpper;
         public float? motorRestrictionLower;
-        public PerformanceFeedback? performanceFeedback;
         public Embodiment? embodiment;
     }
 
@@ -68,12 +67,13 @@ public class ModifiersManager : MonoBehaviour
             motorRestriction = false,
             motorRestrictionUpper = 1f,
             motorRestrictionLower = 0.5f,
-            performanceFeedback = PerformanceFeedback.None,
             embodiment = Embodiment.RightHand
         };
 
     [SerializeField]
     private bool performanceFeedbackText = false;
+    [SerializeField]
+    private PerformanceFeedback performanceFeedback = PerformanceFeedback.All;
 
     [SerializeField]
     private GameObject hideWallLeft;
@@ -159,7 +159,7 @@ public class ModifiersManager : MonoBehaviour
     private EyePatch eyePatch = EyePatch.None;
     private HideWall hideWall = HideWall.None;
     private ControllerSetup controllerSetup = ControllerSetup.Right;
-    private ModifiersManager.PerformanceFeedback performanceFeedback = PerformanceFeedback.All;
+    //private ModifiersManager.PerformanceFeedback performanceFeedback = PerformanceFeedback.All;
     private JudgementType judgementType = JudgementType.MaxSpeed;
     private bool mirrorEffect;
     private bool physicalMirrorEffect;
@@ -197,7 +197,6 @@ public class ModifiersManager : MonoBehaviour
             {"HideWall", "No Hide Wall Defined"},
             {"HideWallAmount", "No Hide Wall Amount Defined"},
             {"GeometricMirror", "No GeometricMirror Defined"},
-            {"PerformanceFeedback", "No PerformanceFeedback Defined"},
             {"Embodiment", "Undefined"},
         });
         // Initialization of the starting values of the parameters.
@@ -211,7 +210,6 @@ public class ModifiersManager : MonoBehaviour
             {"HideWall", System.Enum.GetName(typeof(HideWall), defaultModifiers.hideWall)},
             {"HideWallAmount", defaultModifiers.hideWallAmount},
             {"GeometricMirror", defaultModifiers.geometricMirrorEffect},
-            {"PerformanceFeedback", defaultModifiers.performanceFeedback},
             {"Embodiment", System.Enum.GetName(typeof(Embodiment), defaultModifiers.embodiment)},
         });
     }
@@ -219,6 +217,7 @@ public class ModifiersManager : MonoBehaviour
     void Start()
     {
         SetDefaultModifiers();
+        SetPerformanceFeedback(performanceFeedback);
     }
 
     private Pointer getActivePointer(GameObject controller)
@@ -246,7 +245,6 @@ public class ModifiersManager : MonoBehaviour
             case "MotorRestriction": defaultModifiers.motorRestriction = (bool)val; break;
             case "MotorRestrictionUpper": defaultModifiers.motorRestrictionUpper = (float)val; break;
             case "MotorRestrictionLower": defaultModifiers.motorRestrictionLower = (float)val; break;
-            case "PerformanceFeedback": defaultModifiers.performanceFeedback = (PerformanceFeedback)val; break;
             case "Embodiment": defaultModifiers.embodiment = (Embodiment)val; break;
             default: break;
         }
@@ -272,7 +270,6 @@ public class ModifiersManager : MonoBehaviour
         SetPrismOffset(modifiers.prismOffset.Value);
         SetMainController(modifiers.controllerSetup.Value);
         SetControllerEnabled(modifiers.controllerSetup.Value, true);
-        SetPerformanceFeedback(modifiers.performanceFeedback.Value);
         SetEmbodiment(modifiers.embodiment.Value);
         // remove the thing to force when it's = null and check if it still execute everything
     }
@@ -350,8 +347,12 @@ public class ModifiersManager : MonoBehaviour
         });
     }
 
-
     public void SetPerformanceFeedback(PerformanceFeedback value)
+    {
+        SetPerformanceFeedback(value, performanceFeedbackText);
+    }
+
+    public void SetPerformanceFeedback(PerformanceFeedback value, bool withText)
     {
         bool actionFeedback = false;
         bool operationFeedback = false;
@@ -373,7 +374,7 @@ public class ModifiersManager : MonoBehaviour
                 break;
         }
 
-        bool withText = performanceFeedbackText;
+        performanceFeedbackText = withText;
         // Apply values to all modifiers
         wallManager.SetActionPerformanceFeedback(actionFeedback, withText);
         foreach (Pointer c in rightControllerPointers)

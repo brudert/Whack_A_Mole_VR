@@ -39,7 +39,6 @@ public class PointerTrailHandler : MonoBehaviour
     [SerializeField, Range(1f, 4f)]
     private float maxTargetPitch = 1.3f;
 
-
     private bool isVisible = true;
     private bool configVisibility = true;
     private bool lastRuntimeVisibilityState;
@@ -71,8 +70,6 @@ public class PointerTrailHandler : MonoBehaviour
 
         trailRenderer.endColor = new Color(trailColor.r, trailColor.g, trailColor.b, 0f);
     }
-
-
 
     private void Awake()
     {
@@ -108,7 +105,6 @@ public class PointerTrailHandler : MonoBehaviour
         // Stop playing the sound when the script is destroyed
         soundManager.StopSound(trailSound);
     }
-
 
     private void UpdateTrailProperties()
     {
@@ -149,18 +145,10 @@ public class PointerTrailHandler : MonoBehaviour
         }
     }
 
-
-
     private float GetNonLinearSpeed()
     {
         return Mathf.Pow(speed, 0.3f);
     }
-
-
-
-
-
-
 
     private void UpdateRuntimeVisibility()
     {
@@ -185,9 +173,6 @@ public class PointerTrailHandler : MonoBehaviour
             SetRuntimeVisibility(currentRuntimeVisibility);
         }
     }
-
-
-
 
     private bool IsTrulyVisible()
     {

@@ -26,6 +26,8 @@ public class BasicPointer : Pointer
     private float totalShootTime;
     private string hover = "";
 
+    internal Vector3 MappedPosition { get; private set; }
+
     // Function for debugging controls, using mouse or keyboard. Only active if the Left Control key is held down. Also adds mouse controls if Left Alt is held down.
     public void Update()
     {
@@ -97,15 +99,15 @@ public class BasicPointer : Pointer
     private void PointerControl()
     {
         Vector2 pos = new Vector2(laserOrigin.transform.position.x, laserOrigin.transform.position.y);
-        Vector3 mappedPosition = laserMapper.ConvertMotorSpaceToWallSpace(pos);
+        MappedPosition = laserMapper.ConvertMotorSpaceToWallSpace(pos);
         Vector3 origin = laserOrigin.transform.position;
-        Vector3 rayDirection = (mappedPosition - origin).normalized;
+        Vector3 rayDirection = (MappedPosition - origin).normalized;
         Vector3 v = controller.transform.position;
 
         performanceManager.OnPointerMove(new MoveData
             {
                 controllerPos = pos,
-                cursorPos = mappedPosition,
+                cursorPos = MappedPosition,
                 name = controllerName
             });
 

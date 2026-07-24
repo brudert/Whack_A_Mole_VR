@@ -561,4 +561,12 @@ public class WallManager : MonoBehaviour
     {
         return performanceFeedbackAction;
     }
+    internal Vector3 GetWallCenter()
+    {
+        return new Vector3(
+        (highestX + lowestX) / 2f,
+        (highestY + lowestY) / 2f,
+        (highestZ + lowestZ) / 2f
+        ); ;
+    }
 }

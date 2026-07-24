@@ -434,6 +434,29 @@ public class LaserMapper : MonoBehaviour
         CalculateGain();
         UpdateMotorSpaceVisualizer();
     }
+    public void SetMotorSpaceOutOfBoundsSignifierStatic()
+    {
+        foreach (BubbleDisplay bub in bubbleDisplay)
+            bub.ChangeIndicator(ArrowType.StaticPointing, GetCurrentController().name);
+    }
+
+    public void SetMotorSpaceOutOfBoundsSignifierDynamic()
+    {
+        foreach (BubbleDisplay bub in bubbleDisplay)
+            bub.ChangeIndicator(ArrowType.DynamicCenter, GetCurrentController().name);
+    }
+
+    internal void SetMotorSpaceOutOfBoundsSignifierDynamicReversed()
+    {
+        foreach (BubbleDisplay bub in bubbleDisplay)
+            bub.ChangeIndicator(ArrowType.DynamicCenterReversed, GetCurrentController().name);
+    }
+
+    //internal void DisableMotorSpaceOutOfBoundsSignifier()
+    //{
+    //    foreach (var bub in bubbleDisplay)
+    //        bub.ChangeIndicator(ArrowType.None, GetCurrentController().name);
+    //}
 
     public Vector3 ConvertMotorSpaceToWallSpace(Vector3 coord)
     {
@@ -557,4 +580,10 @@ public class LaserMapper : MonoBehaviour
     // Get the current controller that is being used by this laser mapper instance.
     // Should have just one controller at a time.
     public GameObject GetCurrentController() => activeControllers.FirstOrDefault();
+
+    // Get the center position of the wall in world space.
+    public Vector3 GetWallMeshCenter()
+    {
+        return wallManager.GetWallCenter();
+    }
 }
